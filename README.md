@@ -435,3 +435,115 @@ Let me know if you want:
 - An updated **GitHub Actions workflow** sample for deployment
 
 Would you like this README copied into your local project too?
+
+
+
+
+GitHub App with OIDC Integration for ARC
+This method will avoid using GitHub PAT secrets and use OIDC federation to securely authenticate runners on your AKS cluster.
+
+✅ Prerequisites:
+Admin access to the GitHub organization (or repo)
+
+ARC (Actions Runner Controller) already installed in your AKS cluster ✅ (you did this)
+
+Cert-Manager installed ✅
+
+Helm setup done ✅
+
+GitHub repo available ✅ ssdaggupati/aks-github-actions-demo
+
+1️⃣ Create a GitHub App for ARC
+Go to: https://github.com/settings/apps/new
+(If you're doing this for an organization, go to: https://github.com/organizations/YOUR_ORG/settings/apps/new)
+
+Fill in the form:
+
+GitHub App name: ssdaggupati-aks-arc (or anything unique)
+
+Homepage URL: https://github.com/ssdaggupati
+
+Callback URL: Leave blank
+
+Webhook URL: http://arc-actions-runner-controller-webhook.actions-runner-system.svc.cluster.local
+(This works internally in cluster)
+
+Webhook Secret: Leave blank (ARC doesn’t use it)
+
+Permissions:
+
+Repository:
+
+Actions: Read & write
+
+Administration: Read
+
+Metadata: Read
+
+Contents: Read
+
+Self-hosted runners: Read & write
+
+Subscribe to events:
+
+workflow_job
+
+Where can this GitHub App be installed?
+
+Choose: Only on this account
+
+Click Create GitHub App.
+
+
+the controller-manager secret
+You already deleted it — now re-run this to recreate it properly:
+
+bash
+Copy code
+kubectl create secret generic controller-manager \
+  --namespace actions-runner-system \
+  --from-literal=github_app_id=1481766 \
+  --from-literal=github_app_installation_id=73567236 \
+  --from-literal=github_app_client_id=Iv23liNTY4ToRjnhmEzX \
+  --from-file=github_app_private_key="C:/Users/shyam/Downloads/ssdaggupati-aks-arc.2025-06-29.private-key.pem"
+✅ Make sure to use / instead of \ for Windows paths in Git Bash.
+
+
+
+Perfect! Your ARC (Actions Runner Controller) has been successfully upgraded and deployed.
+
+Now we’ll continue with the next step in the deployment process — creating the Runner resource to connect your AKS-hosted runner to the GitHub repo (ssdaggupati/aks-github-actions-demo), using OIDC-based GitHub App authentication.
+
+✅ Step: Create the Runner YAML
+📁 Create this file in the manifests/ folder:
+
+bash
+Copy code
+nano manifests/arc-deployment.yaml
+📄 Paste this manifest (OIDC-based Runner Deployment):
+
+yaml
+Copy code
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: arc-runner
+  namespace: actions-runner-system
+spec:
+  replicas: 1
+  template:
+    spec:
+      repository: ssdaggupati/aks-github-actions-demo
+🔐 This works because you're using a GitHub App with OIDC (no secrets or PAT required).
+
+🚀 Apply the RunnerDeployment
+bash
+Copy code
+kubectl apply -f manifests/arc-deployment.yaml
+✅ Confirm Runner Pod is Running:
+bash
+Copy code
+kubectl get pods -n actions-runner-system -l app.kubernetes.io/name=runner
+You should see a Running pod within a minute or two.
+
+# dummy change
