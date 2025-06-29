@@ -3,6 +3,7 @@ tree_output.txt
 
 # Virtual environment
 venv/
+bot_venv/
 
 # Environment variables
 .env

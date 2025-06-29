@@ -269,3 +269,169 @@ Once installed, run:
 
 az login
 A browser window will open. Log in with your Azure account.
+
+
+
+README.md for aks-github-actions-demo
+markdown
+Copy code
+# AKS + GitHub Actions Self-Hosted Runner on Kubernetes (ARC)
+
+This project demonstrates how to deploy and configure a **self-hosted GitHub Actions runner on Azure Kubernetes Service (AKS)** using the official [actions-runner-controller](https://github.com/actions/actions-runner-controller) Helm chart.
+
+---
+
+## 🧱 Project Structure
+
+aks-github-actions-demo/
+├── .github/
+│ └── workflows/
+│ └── build.yaml # CI pipeline to deploy to AKS
+├── manifests/
+│ ├── arc-deployment.yaml # Runner Deployment (Optional for Manual)
+│ └── github-runner-secret.yaml # GitHub PAT (Only if not using OIDC)
+├── helm/
+│ └── values.yaml # Custom Helm config (optional)
+├── README.md
+└── scripts/ # Utility setup scripts (coming soon)
+
+yaml
+Copy code
+
+---
+
+## 🔧 Prerequisites
+
+- ✅ Azure CLI installed
+- ✅ Logged in to Azure
+- ✅ Azure Subscription with AKS access
+- ✅ GitHub account with admin access (to create App or PAT)
+
+---
+
+## 🚀 Step-by-Step Guide
+
+### ✅ Step 1: Install Azure CLI (If not already)
+
+[Download Azure CLI for Windows](https://aka.ms/installazurecliwindows)
+
+```bash
+az login
+az account set --subscription "<SUBSCRIPTION_NAME>"
+✅ Step 2: Create AKS Cluster
+bash
+Copy code
+RESOURCE_GROUP=aks-rg
+CLUSTER_NAME=aks-cluster
+az group create --name $RESOURCE_GROUP --location eastus
+
+az aks create \
+  --resource-group $RESOURCE_GROUP \
+  --name $CLUSTER_NAME \
+  --node-count 1 \
+  --node-vm-size Standard_B2s \
+  --generate-ssh-keys
+
+az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME
+kubectl get nodes
+✅ Step 3: Install Cert-Manager
+bash
+Copy code
+kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/latest/download/cert-manager.yaml
+kubectl get pods --namespace cert-manager
+✅ Step 4: Install ARC (Actions Runner Controller)
+bash
+Copy code
+helm repo add actions-runner-controller https://actions-runner-controller.github.io/actions-runner-controller
+helm repo update
+
+kubectl create namespace actions-runner-system
+
+helm install arc actions-runner-controller/actions-runner-controller \
+  --namespace actions-runner-system \
+  --set authSecret.create=true \
+  --set githubWebhookServer.enabled=true
+✅ Step 5: Set Up GitHub Repository
+If you haven’t created the GitHub repo yet:
+
+bash
+Copy code
+git init
+git remote add origin https://github.com/<your-username>/aks-github-actions-demo.git
+git branch -M main
+git add .
+git commit -m "Initial commit"
+git push -u origin main
+✅ Step 6: Configure GitHub Runner Authentication
+You have two options:
+
+🔒 Option 1: Secure GitHub App with OIDC (Recommended)
+No need to store Personal Access Tokens!
+
+Create a GitHub App with actions:write, actions:read, administration, and repository scopes.
+
+Configure ARC to use this App and enable OIDC trust with Azure.
+
+📌 Let me know if you want the full walkthrough for this.
+
+🔐 Option 2: Use PAT (Personal Access Token)
+If you're using PAT instead of GitHub App:
+
+Create a token with repo and admin:repo_hook scopes
+
+Save as Kubernetes secret:
+
+bash
+Copy code
+kubectl create secret generic controller-manager \
+  -n actions-runner-system \
+  --from-literal=github_token='<YOUR_PAT>'
+✅ Step 7: Create Self-Hosted Runner Resource
+yaml
+Copy code
+# .github/workflows/build.yaml (example)
+name: Build and Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v3
+      - name: Print Hello
+        run: echo "Hello from AKS runner!"
+📎 Resources
+actions-runner-controller Docs
+
+Azure AKS CLI Guide
+
+OIDC Setup Guide
+
+🧼 Cleanup
+bash
+Copy code
+az group delete --name $RESOURCE_GROUP --yes --no-wait
+📣 Contribution
+Open PRs or issues if you want to extend the demo with:
+
+Ingress + TLS
+
+Horizontal scaling
+
+GitOps ArgoCD integration
+
+yaml
+Copy code
+
+---
+
+Let me know if you want:
+
+- A **`values.yaml`** for fine-tuned ARC configuration
+- Full **OIDC GitHub App YAML walkthrough**
+- An updated **GitHub Actions workflow** sample for deployment
+
+Would you like this README copied into your local project too?
