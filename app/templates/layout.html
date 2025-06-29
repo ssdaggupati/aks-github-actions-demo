@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Application</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Add Font Awesome CDN link here -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <header>
+        <h1> Project: IGNITUS </h1>
+        <p> We offer a variety of intelligent tools to help you generate essays, create images, interact with a chatbot, transcribe audio, and summarize texts. Choose the tool you need below! </p>
+        <nav>
+            <a href="/" class="{{ 'active' if request.path == '/' else '' }}">Home</a>
+            <a href="/essay" class="{{ 'active' if request.path == '/essay' else '' }}">Essay Generation</a>
+            <a href="/image" class="{{ 'active' if request.path == '/image' else '' }}">Image Generation</a>
+            <a href="/chatbot" class="{{ 'active' if request.path == '/chatbot' else '' }}">ChatBot</a>
+            <a href="/audio" class="{{ 'active' if request.path == '/audio' else '' }}">Audio Transcription</a>
+            <a href="/summary" class="{{ 'active' if request.path == '/summary' else '' }}">Text Summarizer</a>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        <!-- Example of Download Section -->
+        <section class="download-section">
+            <h2 class="title">Download Options</h2>
+            <p>Choose a format to download the generated content:</p>
+            <div class="download-buttons">
+                <a href="/download/word" class="download-btn">
+                    <i class="fas fa-file-word"></i> Word Document
+                </a>
+                <a href="/download/pdf" class="download-btn">
+                    <i class="fas fa-file-pdf"></i> PDF
+                </a>
+                <a href="/download/ppt" class="download-btn">
+                    <i class="fas fa-file-powerpoint"></i> PowerPoint
+                </a>
+            </div>
+        </section>
+        {% endblock %}
+    </main>
+
+    <footer>
+        &copy; 2024 AI Project - All rights reserved.
+    </footer>
+</body>
+</html>
