@@ -12,7 +12,7 @@ env:
 
 jobs:
   build-and-deploy:
-    runs-on: arc-runner-set  # 👈 This uses your ARC GitHub App runner
+    runs-on: arc-runner-set
 
     steps:
       - name: Checkout Code
