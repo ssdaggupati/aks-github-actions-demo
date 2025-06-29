@@ -1,4 +1,4 @@
-name: Build and Deploy to AKS
+name: Build and Deploy to AKS #
 
 on:
   push:
@@ -6,13 +6,14 @@ on:
       - main
 
 env:
-  AZURE_CONTAINER_REGISTRY: <YOUR_ACR_NAME>.azurecr.io
+  AZURE_CONTAINER_REGISTRY: ssdaggupatiacr.azurecr.io
   AKS_CLUSTER_NAME: aks-cluster
   AKS_RESOURCE_GROUP: aks-rg
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: arc-runner-set  # 👈 This uses your ARC GitHub App runner
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -22,7 +23,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Set up Docker to use ACR
+      - name: Log in to ACR
         run: |
           az acr login --name ${{ env.AZURE_CONTAINER_REGISTRY }}
 
@@ -37,4 +38,4 @@ jobs:
 
       - name: Deploy to AKS
         run: |
-          kubectl apply -f ./k8s
+          kubectl apply -f ./manifests
