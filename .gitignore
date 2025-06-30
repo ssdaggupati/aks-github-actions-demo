@@ -5,6 +5,10 @@ tree_output.txt
 venv/
 bot_venv/
 
+# 
+manifests/controller-manager.yaml
+
+
 # Environment variables
 .env
 

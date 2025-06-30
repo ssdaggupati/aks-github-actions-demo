@@ -1,0 +1,15 @@
+githubConfigUrl: https://github.com/ssdaggupati/aks-github-actions-demo
+
+githubConfigSecret:
+  name: controller-manager
+
+controllerServiceAccount:
+  name: arc-actions-runner-controller
+  namespace: arc-systems
+
+template:
+  spec:
+    containers:
+      - name: runner
+        image: ghcr.io/actions/actions-runner:latest
+    serviceAccountName: arc-actions-runner-controller

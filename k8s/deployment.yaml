@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: flask-app
+  labels:
+    app: flask-app
 spec:
   replicas: 1
   selector:
@@ -13,10 +15,7 @@ spec:
         app: flask-app
     spec:
       containers:
-      - name: flask-container
-        image: <YOUR_ACR_NAME>.azurecr.io/flask-app:latest
-        ports:
-        - containerPort: 5000
-        env:
-        - name: FLASK_ENV
-          value: production
+        - name: flask-app
+          image: ssdaggupatiacr.azurecr.io/flask-app:latest
+          ports:
+            - containerPort: 5000

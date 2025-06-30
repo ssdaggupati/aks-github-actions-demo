@@ -1,4 +1,4 @@
-name: Build and Deploy to AKS #
+name: Build and Deploy to AKS
 
 on:
   push:
@@ -24,8 +24,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Log in to ACR
-        run: |
-          az acr login --name ${{ env.AZURE_CONTAINER_REGISTRY }}
+        run: az acr login --name ssdaggupatiacr
 
       - name: Build and Push Docker Image
         run: |
@@ -33,9 +32,7 @@ jobs:
           docker push ${{ env.AZURE_CONTAINER_REGISTRY }}/flask-app:latest
 
       - name: Set AKS context
-        run: |
-          az aks get-credentials --resource-group ${{ env.AKS_RESOURCE_GROUP }} --name ${{ env.AKS_CLUSTER_NAME }}
+        run: az aks get-credentials --resource-group ${{ env.AKS_RESOURCE_GROUP }} --name ${{ env.AKS_CLUSTER_NAME }}
 
       - name: Deploy to AKS
-        run: |
-          kubectl apply -f ./manifests
+        run: kubectl apply -f ./manifests

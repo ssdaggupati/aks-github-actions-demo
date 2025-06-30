@@ -1,6 +1,6 @@
 authSecret:
   create: false
-  name: controller-manager
+  name: controller-manager  # references the secret we’ll create manually
 
 githubWebhookServer:
   enabled: true

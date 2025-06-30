@@ -548,3 +548,60 @@ You should see a Running pod within a minute or two.
 
 # dummy change
 # Trigger Deployment
+
+
+Here are all the categorized commands used in this conversation for setting up GitHub Actions Runner Controller (ARC) with GitHub App + OIDC on AKS:
+
+🧹 Cleanup Commands
+bash
+Copy code
+helm list -n arc-systems
+helm uninstall arc -n arc-systems
+helm uninstall arc-runner-set -n arc-systems
+kubectl delete namespace arc-systems
+kubectl delete clusterrole arc-actions-runner-controller-proxy --ignore-not-found
+kubectl delete clusterrolebinding arc-actions-runner-controller-proxy-binding --ignore-not-found
+helm list -A
+kubectl get namespaces | grep arc
+kubectl get clusterrole | grep arc
+kubectl get clusterrolebinding | grep arc
+kubectl get pods --all-namespaces | grep arc
+📦 Helm Repo Setup
+bash
+Copy code
+helm repo add actions-runner-controller https://actions-runner-controller.github.io/actions-runner-controller
+helm repo update
+🔐 Create GitHub App Secret in Kubernetes
+bash
+Copy code
+kubectl create namespace arc-systems
+
+kubectl create secret generic controller-manager \
+  --namespace arc-systems \
+  --from-literal=github_app_id=1481766 \
+  --from-literal=github_app_installation_id=73567236 \
+  --from-file=github_app_private_key="C:/Users/shyam/Downloads/ssdaggupati-aks-arc.2025-06-29.private-key.pem"
+🚀 Install ARC Controller via Helm
+bash
+Copy code
+helm upgrade --install arc \
+  actions-runner-controller/actions-runner-controller \
+  --namespace arc-systems \
+  -f helm/values.yaml
+🏃 Install Runner Scale Set (GitHub App + OIDC)
+bash
+Copy code
+# Create a values.runner.yaml first (not shown here)
+cd helm
+nano values.runner.yaml
+cd ..
+
+helm upgrade --install arc-runner-set \
+  actions-runner-controller/gha-runner-scale-set \
+  --namespace arc-systems \
+  -f helm/values.runner.yaml
+🔍 Validation and Debug
+bash
+Copy code
+kubectl get pods -n arc-systems
+Let me know if you want these commands turned into a single runnable .sh script or a README-style documentation block.
