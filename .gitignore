@@ -1,13 +1,16 @@
 # Files and directories to ignore
 tree_output.txt
 
+# Exclude local dev and deployment scripts
+Commands.md
+Create_AKS_+_ACR_setup.sh
+GitHub_OIDC_+_Federated_Identity_Setup.sh
+
 # Virtual environment
-venv/
 bot_venv/
 
 # 
 manifests/controller-manager.yaml
-
 
 # Environment variables
 .env
@@ -33,3 +36,14 @@ __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
+*.pyc
+
+# Exclude private keys and certs
+app/privkey.pem
+app/certs/
+
+# Optional: ignore Helm files (or keep if needed)
+helm/
+
+# Misc
+tree_output.txt
