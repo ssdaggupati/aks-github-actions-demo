@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+permissions:
+  id-token: write
+  contents: read
+
 env:
   AZURE_CONTAINER_REGISTRY: ghademoregistry8419.azurecr.io
   AKS_CLUSTER_NAME: aks-gha-demo
