@@ -33,6 +33,10 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           audience: api://AzureADTokenExchange
+          allow-no-subscriptions: true
+      
+      - name: Debug Azure Subscriptions
+        run: az account show
 
       - name: Login to ACR
         run: az acr login --name ghademoregistry8419
