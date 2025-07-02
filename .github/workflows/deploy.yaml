@@ -26,17 +26,17 @@ jobs:
         run: |
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          audience: api://AzureADTokenExchange
-          allow-no-subscriptions: true
+      # - name: Login to Azure
+      #   uses: azure/login@v1
+      #   with:
+      #     client-id: ${{ secrets.AZURE_CLIENT_ID }}
+      #     subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      #     tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+      #     audience: api://AzureADTokenExchange
+      #     allow-no-subscriptions: true
       
-      - name: Debug Azure Subscriptions
-        run: az account show
+      # - name: Debug Azure Subscriptions
+      #   run: az account show
 
       - name: Login to ACR
         run: az acr login --name ghademoregistry8419
@@ -45,10 +45,12 @@ jobs:
         run: |
           docker build -t ${{ env.AZURE_CONTAINER_REGISTRY }}/flask-app:latest ./app
           docker push ${{ env.AZURE_CONTAINER_REGISTRY }}/flask-app:latest
+      
       - name: Set AKS context using kubeconfig
         run: |
           mkdir -p ~/.kube
           echo "${{ secrets.KUBECONFIG }}" | base64 -d > ~/.kube/config
           chmod 600 ~/.kube/config
+
       - name: Deploy to AKS
         run: kubectl apply -f ./manifests
