@@ -9,7 +9,6 @@ env:
   AZURE_CONTAINER_REGISTRY: ghademoregistry8419.azurecr.io
   AKS_CLUSTER_NAME: aks-gha-demo
   AKS_RESOURCE_GROUP: aks-gha-demo-rg
-  IMAGE_NAME: flask-app
 
 jobs:
   build-and-deploy:
@@ -22,19 +21,14 @@ jobs:
       - name: Install Azure CLI
         run: |
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-      
-      - name: Azure ACR Login
-        run: |
-          az acr login --name ghademoregistry8419
 
       - name: Login to ACR
-        run: |
-          az acr login --name ghademoregistry8419
+        run: az acr login --name ghademoregistry8419
 
       - name: Build and Push Docker Image
         run: |
-          docker build -t ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} ./app
-          docker push ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          docker build -t ${{ env.AZURE_CONTAINER_REGISTRY }}/flask-app:latest ./app
+          docker push ${{ env.AZURE_CONTAINER_REGISTRY }}/flask-app:latest
 
       - name: Set AKS context using kubeconfig
         run: |
@@ -42,6 +36,5 @@ jobs:
           echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
           chmod 600 ~/.kube/config
 
-      - name: Deploy to AKS using kubectl
-        run: |
-          kubectl apply -f ./manifests
+      - name: Deploy to AKS
+        run: kubectl apply -f ./manifests
