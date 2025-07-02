@@ -38,12 +38,12 @@ __pycache__/
 *.pyd
 *.pyc
 
+# Exclude all private keys and certificates globally
+*.pem
 # Exclude private keys and certs
-app/privkey.pem
+app/gh-k8s-arc-runner*.pem
 app/certs/
-
-# Optional: ignore Helm files (or keep if needed)
-helm/
+app/*.pem
 
 # Misc
 tree_output.txt
