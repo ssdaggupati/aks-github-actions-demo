@@ -39,7 +39,7 @@ jobs:
       #   run: az account show
 
       - name: Login to ACR
-        run: az acr login --name ghademoregistry8419
+        run: echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ env.AZURE_CONTAINER_REGISTRY }} -u ${{ secrets.ACR_USERNAME }} --password-stdin
 
       - name: Build and Push Docker Image
         run: |
