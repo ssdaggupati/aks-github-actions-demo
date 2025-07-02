@@ -5,7 +5,9 @@ metadata:
   namespace: arc-systems
 spec:
   githubConfigUrl: https://github.com/ssdaggupati/aks-github-actions-demo
-  githubConfigSecret: controller-manager
+  githubConfigSecret:
+    name: github-app-secret
+    key: github_app
   replicas: 1
   template:
     spec:
