@@ -12,15 +12,11 @@ env:
 
 jobs:
   build-and-deploy:
-    runs-on: self-hosted
+    runs-on: arc-runner-set
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-
-      - name: Install Azure CLI
-        run: |
-          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
       - name: Login to ACR
         run: az acr login --name ghademoregistry8419
@@ -29,12 +25,10 @@ jobs:
         run: |
           docker build -t ${{ env.AZURE_CONTAINER_REGISTRY }}/flask-app:latest ./app
           docker push ${{ env.AZURE_CONTAINER_REGISTRY }}/flask-app:latest
-
       - name: Set AKS context using kubeconfig
         run: |
           mkdir -p ~/.kube
           echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
           chmod 600 ~/.kube/config
-
       - name: Deploy to AKS
         run: kubectl apply -f ./manifests
