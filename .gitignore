@@ -42,7 +42,6 @@ __pycache__/
 *.pem
 # Exclude private keys and certs
 app/gh-k8s-arc-runner*.pem
-app/certs/
 app/*.pem
 
 # Misc
