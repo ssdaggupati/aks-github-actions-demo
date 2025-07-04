@@ -388,6 +388,7 @@ template:
   ##                 requests:
   ##                   storage: 1Gi
   spec:
+    serviceAccountName: arc-runner-set-gha-rs-no-permission
     containers:
       - name: runner
         image: ghcr.io/actions/actions-runner:latest
@@ -405,6 +406,8 @@ template:
 # Overrides the default `.Release.Namespace` for all resources in this chart.
 namespaceOverride: ""
 
+noPermissionServiceAccount:
+  name: arc-runner-set-gha-rs-no-permission
 ## Optional annotations and labels applied to all resources created by helm installation
 ##
 ## Annotations applied to all resources created by this helm chart. Annotations will not override the default ones, so make sure
