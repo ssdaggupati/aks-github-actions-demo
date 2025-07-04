@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: flask-tls
+  namespace: arc-runners
+spec:
+  secretName: flask-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: flask.51.8.217.212.sslip.io
+  dnsNames:
+    - flask.51.8.217.212.sslip.io
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d
+

@@ -1,5 +1,7 @@
 # Files and directories to ignore
 tree_output.txt
+stuck-challenge.json
+
 
 # Exclude local dev and deployment scripts
 Commands.md
@@ -43,6 +45,7 @@ __pycache__/
 # Exclude private keys and certs
 app/gh-k8s-arc-runner*.pem
 app/*.pem
+app/AI_Key.txt
 
 # Misc
 tree_output.txt

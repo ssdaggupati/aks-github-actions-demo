@@ -1,0 +1,24 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: gha-deploy-role
+  namespace: arc-runners
+rules:
+- apiGroups: ["", "apps", "extensions", "networking.k8s.io", "cert-manager.io"]
+  resources: ["deployments", "services", "ingresses", "secrets", "pods", "clusterissuers"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: gha-deploy-binding
+  namespace: arc-runners
+subjects:
+- kind: ServiceAccount
+  name: arc-runner-set-gha-rs-no-permission  # This is your GitHub Actions runner SA
+  namespace: arc-runners
+roleRef:
+  kind: Role
+  name: gha-deploy-role
+  apiGroup: rbac.authorization.k8s.io

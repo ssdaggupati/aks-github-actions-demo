@@ -18,7 +18,7 @@ COPY certs/ certs/
 RUN pip install gunicorn
 
 # Expose HTTPS port
-EXPOSE 443
+EXPOSE 5000
 
-# Run the app using Gunicorn with TLS certs
-CMD ["gunicorn", "-b", "0.0.0.0:443", "--certfile=certs/server.crt", "--keyfile=certs/server.key", "app:app"]
+# Run the app using Gunicorn (no TLS)
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]
