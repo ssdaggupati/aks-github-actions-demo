@@ -408,6 +408,8 @@ namespaceOverride: ""
 
 noPermissionServiceAccount:
   name: arc-runner-set-gha-rs-no-permission
+  annotations:
+    azure.workload.identity/client-id: "d9a1f35b-f776-4c05-b00f-7cd4a7f69457"
 ## Optional annotations and labels applied to all resources created by helm installation
 ##
 ## Annotations applied to all resources created by this helm chart. Annotations will not override the default ones, so make sure
