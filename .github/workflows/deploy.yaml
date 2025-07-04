@@ -51,11 +51,24 @@ jobs:
           mkdir -p ~/.kube
           echo "${{ secrets.KUBECONFIG }}" | base64 -d > ~/.kube/config
           chmod 600 ~/.kube/config
+      
       - name: Install kubectl
         run: |
           curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
           chmod +x kubectl
           sudo mv kubectl /usr/local/bin/
+      
+      - name: Wait for cert-manager CRDs
+        run: |
+          for crd in \
+            certificates.cert-manager.io \
+            certificaterequests.cert-manager.io \
+            clusterissuers.cert-manager.io \
+            issuers.cert-manager.io \
+            challenges.acme.cert-manager.io \
+            orders.acme.cert-manager.io; do
+            kubectl wait --for=condition=Established crd/$crd --timeout=60s || true
+          done
 
       - name: Deploy to AKS
         run: kubectl apply -f ./k8s_manifests

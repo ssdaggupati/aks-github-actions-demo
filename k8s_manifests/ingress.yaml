@@ -13,10 +13,10 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - flask.51.8.217.212.sslip.io
+        - flask.57.152.18.67.sslip.io
       secretName: flask-tls
   rules:
-    - host: flask.51.8.217.212.sslip.io
+    - host: flask.57.152.18.67.sslip.io
       http:
         paths:
           - path: /

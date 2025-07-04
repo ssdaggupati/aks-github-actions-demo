@@ -4,10 +4,17 @@ metadata:
   name: gha-deploy-role
   namespace: arc-runners
 rules:
-- apiGroups: ["", "apps", "extensions", "networking.k8s.io", "cert-manager.io"]
-  resources: ["deployments", "services", "ingresses", "secrets", "pods", "clusterissuers"]
-  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: [""]
+  resources: ["pods", "services"]
+  verbs: ["get", "list", "create", "update", "patch", "delete"]
 
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list", "create", "update", "patch", "delete"]
+
+- apiGroups: ["networking.k8s.io"]
+  resources: ["ingresses"]
+  verbs: ["get", "list", "create", "update", "patch", "delete"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
