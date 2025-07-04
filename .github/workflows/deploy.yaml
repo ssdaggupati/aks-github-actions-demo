@@ -26,21 +26,21 @@ jobs:
         run: |
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          audience: api://AzureADTokenExchange
-          allow-no-subscriptions: true
+      # - name: Login to Azure
+      #   uses: azure/login@v1
+      #   with:
+      #     client-id: ${{ secrets.AZURE_CLIENT_ID }}
+      #     subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      #     tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+      #     audience: api://AzureADTokenExchange
+      #     allow-no-subscriptions: true
       
-      - name: Debug Azure Subscriptions
-        run: az account show
+      # - name: Debug Azure Subscriptions
+      #   run: az account show
       
-      - name: Get AKS Credentials
-        run: |
-          az aks get-credentials --name $AKS_CLUSTER_NAME --resource-group $AKS_RESOURCE_GROUP --overwrite-existing
+      # - name: Get AKS Credentials
+      #   run: |
+      #     az aks get-credentials --name $AKS_CLUSTER_NAME --resource-group $AKS_RESOURCE_GROUP --overwrite-existing
 
       - name: Login to ACR
         run: echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ env.AZURE_CONTAINER_REGISTRY }} -u ${{ secrets.ACR_USERNAME }} --password-stdin
