@@ -8,9 +8,9 @@ spec:
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
-  commonName: flask.57.151.68.214.sslip.io
+  commonName: flask.52.224.38.71.sslip.io
   dnsNames:
-    - flask.57.151.68.214.sslip.io
+    - flask.52.224.38.71.sslip.io
   duration: 2160h # 90d
   renewBefore: 360h # 15d
 
